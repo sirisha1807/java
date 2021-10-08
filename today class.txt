@@ -1,0 +1,95 @@
+public class Contact {
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+public Contact(String firstName, String lastName,String phoneNumber){
+    this.firstName=firstName;
+    this.lastName=lastName;
+    this.phoneNumber=phoneNumber;
+}
+public String getFirstName() {
+    return firstName;
+}
+public void setFirstName() {
+    this.firstName = firstName;
+}
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName() {
+        this.lastName = lastName;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber() {
+        this.phoneNumber = phoneNumber;
+    }
+    public void validateFirstName(){
+    if(this.firstName==null)
+        throw new RuntimeException("first name can not be null");
+    }
+    public void validateLastName(){
+        if(this.lastName==null)
+            throw new RuntimeException("last name can not be null");
+    }
+    public void validatePhoneNumber(){
+    if(this.phoneNumber.length()!=10){
+        throw new RuntimeException("phone number should be 10 digit long");
+    }
+    if (!this.phoneNumber.matches("\\d+")){
+        throw new RuntimeException("phone number should match digits");
+    }
+    if(!this.phoneNumber.startsWith("0")){
+        throw new RuntimeException("phone number should start with zero");
+    }
+    }
+}
+
+
+
+
+import javax.xml.validation.Validator;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class ContactManager {
+    Map<String,Contact> contactList= new ConcurrentHashMap<String, Contact>();
+    public void addContact(String firstName, String lastName, String phoneNumber) {
+        Contact contact = new Contact(firstName, lastName, phoneNumber);
+        validateContact(contact);
+        checkIfContactAlreadyExist(contact);
+        contactList.put(generatekey(contact),contact );
+    }
+    public Collection<Contact> getAllContact(){
+        return contactList.values();
+    }
+    private String generatekey(Contact contact){
+        return String.format("%s-%s", contact.getFirstName(),contact.getLastName());
+    }
+    private void checkIfContactAlreadyExist(Contact contact){
+        if(contactList.containsKey(generatekey(contact))){
+            throw new RuntimeException("contact already exits");
+        }
+    }
+    private void validateContact(Contact contact){
+        contact.validateFirstName();
+        contact.validateLastName();
+        contact.validatePhoneNumber();
+    }
+    }
+
+
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class ContactManagerTest {
+    public void shouldCreateContact(){
+
+    }
+}
