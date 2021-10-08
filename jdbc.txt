@@ -1,0 +1,109 @@
+
+import java.util.Scanner;
+        import java.sql.*;
+        class JdbcConnection {
+    static Scanner ip=new Scanner(System.in);
+    private static Connection con ;
+    private static Statement stm;
+    public static void main(String[] args) throws SQLException {
+
+        try {
+            String addr = "jdbc:mysql://localhost:3306/student";
+            String username = "root";
+            String password = "root";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("Connected!!!");
+            con = DriverManager.getConnection(addr, username, password);
+            stm=con.createStatement();
+            Scanner ip = new Scanner(System.in);
+            while (true) {
+                System.out.println("please chose your option");
+                System.out.println("1.Insert\n2.Delete\n3.Update\n4.Display\n5.Exit");
+                int option = ip.nextInt();
+                switch (option) {
+                    case 1:
+                        insert();
+                        break;
+                    case 2:
+                        delete();
+                        break;
+                    case 3:
+                        update();
+                        break;
+                    case 4:
+                        display();
+                        break;
+                    case 5:
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("choose the correct option");
+                }
+            }
+
+        }
+        catch (ClassNotFoundException exe) {
+
+        }
+        catch (SQLException exe) {
+
+        }
+    }
+
+    public static void insert() throws SQLException {
+        System.out.println("enter usn");
+        int usn=ip.nextInt();
+        System.out.println("enter age");
+        int age=ip.nextInt();
+        System.out.println("enter name");
+        String S_name=ip.next();
+        System.out.println("enter branch");
+        String branch=ip.next();
+        System.out.println("enter place");
+        String place=ip.next();
+        String sql1="insert into St values(?,?,?,?,?)";
+        PreparedStatement pstm=con.prepareStatement(sql1);
+        pstm.setInt(1,usn);
+        pstm.setInt(2,age);
+        pstm.setString(3,S_name);
+        pstm.setString(4,branch);
+        pstm.setString(5,place);
+        int status= pstm.executeUpdate();
+        System.out.println("Insertion done");
+
+    }
+    public static void delete() throws SQLException {
+        System.out.println("enter usn");
+        int usn=ip.nextInt();
+        String sql2="delete from St where usn="+usn+"";
+        stm.executeUpdate(sql2);
+    }
+    public static void update() throws SQLException {
+        System.out.println("enter the usn");
+        int usn= ip.nextInt();
+        System.out.println("enter the current name");
+        String current_name = ip.next();
+        System.out.println("enter the name which you want to update");
+        String pri_name = ip.next();
+        String sql3 = "update St set S_name=? where S_name=? and usn="+usn+"";
+        PreparedStatement pstm = con.prepareStatement(sql3);
+        pstm.setString(1, pri_name);
+        pstm.setString(2, current_name);
+        int status = pstm.executeUpdate();
+        if (status == 0) {
+            System.out.println("Enter the name which is present in the table");
+        }
+    }
+    public static void display() throws SQLException {
+        System.out.println("enter the usn");
+        int usn=ip.nextInt();
+        String sqlQuery="select * from St where usn="+usn+"";
+        ResultSet res=stm.executeQuery(sqlQuery);
+        while(res.next()){
+            System.out.println("Usn :"+res.getInt(1 )+"\t Age :"+res.getInt(2)+"\tS_Name :"+res.getString(3 )+"\tBranch :"+res.getString(4 )+"\tPlace :"+res.getString(5 ));
+        }
+
+    }
+}
+
+
