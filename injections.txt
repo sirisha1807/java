@@ -1,0 +1,86 @@
+
+//student class
+package com.springExample.springFirstClass.Controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class Student {
+    @Autowired
+    College college;
+    public  String  Studentname(){
+        return "siri";
+    }
+    public  String Studentcollege(){
+        return "hkbk";
+    }
+}
+
+
+
+//college
+package com.springExample.springFirstClass.Controllers;
+
+public class College {
+    public  String  Colllgename(){
+        return "reva";
+    }
+    public  String Collegebranch(){
+        return "cse";
+    }
+}
+
+//configure
+package com.springExample.springFirstClass.Controllers;
+
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class Configure {
+    @Bean
+    public  Student student(){
+        return  new Student();
+    }
+    @Bean
+    public College college(){
+        return new College();
+    }
+}
+
+//controller
+package com.springExample.springFirstClass.Controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Controller {
+    @Autowired
+    Student student;
+    @Autowired
+    College college;
+
+@RequestMapping(value = "/home")
+    public String home() {
+    return "Home";
+}
+    @RequestMapping(value = "about")
+            public String about(){
+        return "About";
+    }
+    @RequestMapping(value = "Studentname")
+    public String Studentname(){
+        return student.Studentname();
+        }
+    @RequestMapping(value = "Collegename")
+    public String Collegename(){
+        return college.Colllgename();
+    }
+    }
+
+
+
+
+
